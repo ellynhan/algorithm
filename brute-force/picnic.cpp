@@ -46,7 +46,6 @@ int pairing(int taken[],int n){
 }
 
 int main() {
-    //case가 한개밖에 없다고 생각하고 만들어보자.
     int taken[10]={0,};
     int c, n, m; //c는 케이스 수, n은 학생 수, m은 친구 관계 수
     int result=0;
