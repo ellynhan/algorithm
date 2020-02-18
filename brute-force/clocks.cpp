@@ -5,74 +5,73 @@
 //  Created by 한재원 on 2020/02/17.
 //  Copyright © 2020 한재원. All rights reserved.
 //
+//  Edited by ellyn on 2020/02/18
+//  using vector and iterator for the clocks
+//  keep in my mind that String is a kinda Array and it need one more space for the newline
+//  focus on the recurssive function format
+//  it's gonna be 10 10 10 and then, 9 10 10 10 , 9 9 10 10 10 , 9 9 9 10 10 10, 8 9 9 9 10 10 10 .... like this. 
+//  I need more practice to get accustomed to this method. 
+
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 using namespace std;
 
-const int switchs[10][5]={
-    {0,1,2,16,16},
-    {3,7,9,11,16},
-    {4,10,12,15,16},
-    {0,4,5,6,7},
-    {6,7,8,10,12},
-    {0,2,14,15,16},
-    {3,14,15,16,16},
-    {4,5,7,14,15},
-    {1,2,3,4,5},
-    {3,4,5,9,13}
-};
+const int INF = 9999, SWITCHES = 10, CLOCKS = 16;
+const char linked[SWITCHES][CLOCKS+1]={//문자열 마지막에는 개행문자 공간이 필요함
+    "xxx.............",
+    "...x...x.x.x....",
+    "....x.....x...xx",
+    "x...xxxx........",
+    "x.x...........xx",
+    "...x..........xx",
+    "....xx.x......xx",
+    ".xxxxx..........",
+    "...xxx...x...x.." };
 
-int PushSwitchs(int* clocks, int callCount, int* clkCount,int ret){
-    cout<<"asdfasdf"<<endl;
-    int sum=0;
-    for(int i=0; i<16; i++)sum+=clocks[i];
-    if(sum==0)return callCount; //시계가 모두 12시를 가리키고 있음
-    //스위치10개 반복
-    for(int i=0; i<10; i++){
-        if(clkCount[i]!=4)return -1;//한 스위치당 4번 반복은 의미가 없음
-        int tmp[5]={0,};
-        for(int j=0; j<5&&switchs[i][j]!=16; j++){
-            tmp[j] = clocks[switchs[i][j]];
-            clocks[switchs[i][j]]=(tmp[j]+1)%3;
-        }
-        clkCount[i]++;
-        int tmp_ret=PushSwitchs(clocks, callCount+1, clkCount, ret);
-        if(tmp_ret==-1)return -1;
-        ret= ret<tmp_ret?ret:tmp_ret;
-        
-        for(int j=0; j<5&&switchs[i][j]!=16; j++){ //시계 원래대로 돌려놓기
-            clocks[switchs[i][j]]=tmp[j];
-        }
-        clkCount[i]--;
-        
+bool areAligned(vector<int>& clocks){ // 모든 시계가 12시를 가리키고 있는지 확인하는 함수
+    vector<int>::iterator it;
+    for(it=clocks.begin(); it!=clocks.end(); it++){
+        if(*it!=12)
+            return false;
     }
-    
+    return true;
+}
+
+void push(vector<int>& clocks, int swtch){ //swtch번째의 스위치를 누른다, clocks는 현재 시계들의 상태
+    for(int i=0; i<CLOCKS; i++){
+        if(linked[swtch][i]=='x'){
+            clocks[i]+=3;
+            if(clocks[i]==15)clocks[i]=3;
+        }
+    }
+}
+
+int solve(vector<int>& clocks, int swtch){
+    if(swtch == SWITCHES)return areAligned(clocks) ? 0 : INF;
+    int ret=INF;
+    for(int cnt=0; cnt<4; cnt++){
+        ret=min(ret, cnt+solve(clocks, swtch+1));
+        push(clocks, swtch); // 누르고 되돌릴 필요없이 재귀함수를 호출해주고서 누르면 되는구나
+    }
+    //push가 네번 호출되었으니 clocks는 원래와 같은 상태가 된다.
     return ret;
 }
 
+
 int main() {
-    int clocks[17]={0,};
-    int clocks_counts[16]={0,};
-    //int time[4]={0,3,6,9}; // 0 1 2 3
-    ifstream read("input.txt");
-    string a;
-    if(read.is_open()){
-        for(int i=0; i<16; i++){
-            read>>a;
-            if(a=="0"){
-                clocks[i]=0;
-            }else if(a=="3"){
-                clocks[i]=1;
-            }else if(a=="6"){
-                clocks[i]=2;
-            }else{
-                clocks[i]=3;
-            }
+    fstream read("input.txt",fstream::in); //string으로 값을 받지않고 int로 값을 받는다.
+    vector<int> clocks;
+    int cs;
+    read>>cs; // the number of the case
+    while(cs--){
+        for(int i=0; i<CLOCKS; i++){
+            int tmp;
+            read>>tmp;
+            clocks.push_back(tmp);
         }
-    }else{
-        cout<<"cannot open the file"<<endl;
+        cout<<solve(clocks,0)<<endl;
+        clocks.clear(); // make vector empty
     }
-    cout<<PushSwitchs(clocks,0,clocks_counts,31);
-    return 0;
 }
