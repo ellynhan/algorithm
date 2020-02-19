@@ -13,4 +13,4 @@ divide paper by number  (-1,0,1)
 if the number change, divide it in 9 again
 
 ## FAST SUM
-<img src="/img/fastsum.jpeg" width="30" height="30">
+<img src="./img/fastsum.jpeg" width="30" height="30">
