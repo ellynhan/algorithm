@@ -11,3 +11,6 @@ divide and conquer algorithm
 divide paper by number  (-1,0,1) 
 
 if the number change, divide it in 9 again
+
+## FAST SUM
+![fastsum](./img/fastsum.jpeg)
