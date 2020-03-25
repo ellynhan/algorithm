@@ -18,7 +18,7 @@ struct HashNode{
 struct HashTable{
     int size;
     int numOfData;
-    struct HashNode** table; //이게 뭘까?
+    struct HashNode** table;
 };
 
 struct HashTable* CreateHashTable(int tableSize);
