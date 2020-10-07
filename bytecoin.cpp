@@ -46,5 +46,4 @@ int main(){
         }
     }
     cout<<money;
-    
 }
