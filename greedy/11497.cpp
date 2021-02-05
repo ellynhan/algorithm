@@ -1,62 +1,37 @@
-//5시 5분 시작
 #include <iostream>
-#include <vector>
 #include <algorithm>
-
+#include <vector>
 using namespace std;
 
 int main(){
     int testCase;
-    int numberOfLog;
-    vector<int> logHeights;
-    vector<int> tempVector;
-    cin>>testCase;
-    for(int caseNum = 0; caseNum <testCase; caseNum++){
-        cin >> numberOfLog;
-        logHeights.resize(numberOfLog+2);
-        tempVector.resize(numberOfLog);
-
-        for(int log = 0; log<numberOfLog; log++){
-            int heightTmp;
-            cin >> heightTmp;
-            tempVector[log] = heightTmp;
-        }
-        sort(tempVector.begin(), tempVector.end());
-        
-        for(int log = 0; log<numberOfLog; log++){
-            if(log%2==0){
-                logHeights[log+1] = tempVector[log];
+    int numberOfLogs;
+    int maxDiff = 0;
+    int diff;
+    vector<int> logHeight;
+    vector<int> orderedHeight;
+    cin >> testCase;
+    while(testCase--){
+        cin >> numberOfLogs;
+        logHeight.assign(numberOfLogs, 0);
+        orderedHeight.assign(numberOfLogs, 0);
+        for(int i=0; i<numberOfLogs; i++)cin>>logHeight[i];
+        sort(logHeight.begin(), logHeight.end());
+        for(int i=0; i<numberOfLogs; i++){
+            if(i%2==0){
+                orderedHeight[i/2] = logHeight[i];
             }else{
-                logHeights[numberOfLog+1-log] = tempVector[log];
+                orderedHeight[numberOfLogs-i/2-1] = logHeight[i];
             }
         }
-        
-        logHeights[0] = logHeights[numberOfLog];
-        logHeights[numberOfLog+1] = logHeights[1];
-
-        cout<<"height vector ======";
-        
-        cout<<endl;
-        for(int i=0; i<numberOfLog+2; i++){
-            cout<<logHeights[i]<<" ";
+        orderedHeight.push_back(orderedHeight[0]);
+        for(int i=0; i<numberOfLogs; i++){
+            diff = abs(orderedHeight[i+1] - orderedHeight[i]);
+            if( diff > maxDiff ) maxDiff = diff;
         }
-        cout<<endl;
-        cout<<"height vector ======";
-        cout<<endl;
-        cout<<endl;
-        cout<<endl;
-
-        int minLevel = 0;
-        int minTmp1 = 0;
-        int minTmp2 = 0;
-        int level = 0;
-        for(int i=1; i<numberOfLog+1; i++){
-            minTmp1 = abs(logHeights[i-1] - logHeights[i]);
-            minTmp2 = abs(logHeights[i+1] - logHeights[i]);
-            level = minTmp1 > minTmp2 ? minTmp1 : minTmp2;
-            if(level<minLevel) minLevel = level;
-        }
-        cout<< minLevel <<endl;
+        cout<<maxDiff<<endl;
+        maxDiff = 0;
     }
-
 }
+
+
