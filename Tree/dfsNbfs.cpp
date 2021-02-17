@@ -1,49 +1,51 @@
-
 #include <iostream>
 #include <queue>
 using namespace std;
 
-typedef struct Node{
-    priority_queue<int, vector<int>, greater<int>> adj;
-}node;
-
-// int adj[1001][1001];
-node nodes[1001];
-int visited[1001]={0,};
-
+int N, M, start;
+int adj[1001][10001]={0,};
+int visited[2002] = {0,};
 
 void dfs(int vertex){
-    cout << vertex <<" ";
     visited[vertex] = 1;
-    cout<<"시작"<<endl;
-    while(!nodes[vertex].adj.empty()){
-
-        int next = nodes[vertex].adj.top();
-        nodes[vertex].adj.pop();
-        while(visited[next]!=0){
-            next = nodes[vertex].adj.top();
-            nodes[vertex].adj.pop();
+    cout<<vertex<<" ";
+    for(int i=1; i<=N; i++){
+        if(adj[vertex][i] == 1 && visited[i] == 0){
+            dfs(i);
         }
-        dfs(next);
     }
-    cout<<"종료"<<endl;
     return ;
 }
 
  
-void bfs(int vertex){ 
-
+void bfs(int vertex){
+    queue<int> q;
+    q.push(vertex);
+    visited[vertex + 1001] = 1;
+    while(!q.empty()){
+        int start = q.front();
+        q.pop();
+        cout<<start<<" ";
+        for(int i=1; i<=N; i++){
+            if(adj[start][i]== 1 && visited[i+1001] == 0){
+                q.push(i);
+                visited[i+1001] = 1;
+            }
+        }
+    }
+    return ;
 }
 
 int main(){
-   int M, N, start;
    cin >> N >> M >> start;
    for(int i=0; i<M; i++){
-    int index, child;
-    cin >> index >> child;
-    nodes[index].adj.push(child);
-    nodes[child].adj.push(index);
+    int x, y;
+    cin >> x >> y;
+    adj[x][y] = 1;
+    adj[y][x] = 1;
    }
-   dfs(start);
-}
 
+   dfs(start);
+   cout<<endl;
+   bfs(start);
+}
