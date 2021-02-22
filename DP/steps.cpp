@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+
 int scores[301]={0,};
 int maxs[301]={0,};
 int N;
