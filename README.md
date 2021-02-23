@@ -33,3 +33,7 @@ Baekjoon algorithm
 * Matrix class
   
    I have no idea how to make Matrix class. I have to think about it.
+   
+* Greedy :
+
+  현재에서 최선의 해결방안만 모색하는 알고리즘
