@@ -1,57 +1,36 @@
 #include <iostream>
 #include <queue>
-#include <algorithm>
-#include <vector>
-#include <deque>
 using namespace std;
 
-typedef struct File{
-    int order;
-    int prior;
-}files;
-
 int main(){
-    
     int testCase;
     cin >> testCase;
     while(testCase--){
-        priority_queue<int> priors;
-        deque<files*> f;
-        int p[9]={0,};
-        int n, curious;
-        cin >> n >> curious;
-        for(int i=0; i<n; i++){
-            int important;
-            cin >>important;
-            files* tmp = new files;
-            tmp->order = i;
-            tmp->prior = important;
-            f.push_back(tmp);
-
-            if(p[important-1]==0){
-                priors.push(important);
-                p[important-1]=1;
-            }
-            
+        queue<pair<int, int>> priors;
+        priority_queue<int> q;
+        int nums, curious;
+        cin >> nums >> curious;
+        for(int i=0; i<nums; i++){
+            int p;
+            cin >> p;
+            priors.push({i,p});
+            q.push(p);
         }
-        int cnt = 0;
-        bool getAnswer = false;
-        while(!getAnswer){
-            while(!getAnswer&&f.front()->prior == priors.top()){
-                cnt++;
-                if(f.front()->order == curious){
-                    cout<<cnt<<endl;
-                    getAnswer = true;
+        int cnt = 1;
+        while(!q.empty()){
+            if(priors.front().second == q.top()){
+                if(priors.front().first == curious){
+                    cout << cnt <<endl;
                     break;
+                }else{
+                    priors.pop();
+                    q.pop();
+                    cnt++;
                 }
-                f.pop_front();
+            }else{
+                priors.push(priors.front());
                 priors.pop();
             }
-            while(!getAnswer&&f.front()->prior != priors.top()){
-                f.push_back(f.front());
-                f.pop_front();
-            }
         }
-        
-    }
+    }    
 }
