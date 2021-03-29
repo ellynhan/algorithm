@@ -2,37 +2,40 @@
 using namespace std;
 
 int height[500][500];
-long long route[500][500]={0}; //dp
+long long dp[500][500];
+int m,n;
 
 int xx[4]={0,0,-1,1}; //상, 하, 좌, 우
 int yy[4]={-1,1,0,0};
 
-int main(){
-    int m, n;
-    cin >> m >> n;
-    for(int i=0; i<m; i++){
-        for(int j=0; j<n; j++){
-            cin >> height[i][j];
-        }
+long long dfs(pair<int, int> curr){
+    int y = curr.first;
+    int x = curr.second;
+    if(y==m-1 && x==n-1){
+        return 1;
     }
-    route[0][0]=1;
-    pair<int,int> curr = {0,0};
-    for(int i=0; i<m; i++){
-        for(int j=0; j<n; j++){
-            if(route[i][j]!=0){
-                for(int k=0; k<4; k++){
-                    int y = i+yy[k];
-                    int x = j+xx[k];
-                    if(x<0 || y<0 || x>=n || y>=n) continue;
-                    if(height[y][x]<height[i][j]){
-                        route[y][x]+=route[i][j];
-                    }
-                    if(i>0){
-                        route[i][j]=max(route[i][j],route[i-1][j]);
-                    }
-                }
+    if(dp[y][x]==-1){
+        dp[y][x]=0;
+        for(int i=0; i<4; i++){
+            int y_next = y+yy[i];
+            int x_next = x+xx[i];
+            if(y_next<0 || x_next<0 || y_next>=m || x_next>=n)continue;
+            if(height[y_next][x_next]<height[y][x]){
+                dp[y][x]+=dfs({y_next,x_next});
             }
         }
     }
-    cout<<route[m-1][n-1];
+    return dp[y][x];
+}
+
+int main(){
+    cin >> m >> n;
+    for(int i=0; i<m; i++){
+        for(int j=0; j<n; j++){
+            dp[i][j]=-1;
+            cin >> height[i][j];
+        }
+    }
+    dfs({0,0});
+    cout<<dp[0][0];
 }  
