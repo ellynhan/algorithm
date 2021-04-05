@@ -30,7 +30,6 @@ int main(){
         }
         
         depth[P[i]]=left > right ? left+1 : right+1;
-
         answer += depth[P[i]];
     }
     cout<<answer;
