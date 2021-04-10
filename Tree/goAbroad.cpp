@@ -43,4 +43,4 @@ int main(){
         bfs(1);
         cout<<total<<endl;
     }
-}
+} 
