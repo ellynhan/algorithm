@@ -1,4 +1,3 @@
-//1015 1103 중단 1124시작
 #include <iostream>
 #include <queue>
 using namespace std;
@@ -46,7 +45,6 @@ int main(){
     board[1][1]=2;
 
     do{
-        //방향전환하냐?
         if(!changes.empty()&&changes.front().first==totalTime){
             if(changes.front().second=='D'){
                 currentWay+=1;
@@ -70,14 +68,15 @@ int main(){
             break;
         }
 
-        board[Y][X]=2;
-        tail.push({X,Y});
-
         //사과가 없냐?
-        if(board[Y][X]!=1&&board[Y][X]!=2){
+        if(board[Y][X]!=1){
             board[tail.front().second][tail.front().first]=0;
             tail.pop();
         }
+
+        board[Y][X]=2;
+        tail.push({X,Y});
+
         totalTime++;
     }while(true);
     cout<<totalTime+1;
