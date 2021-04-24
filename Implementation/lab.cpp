@@ -1,66 +1,91 @@
-//11시30분
 #include <iostream>
-#include <vector>
+#include <map>
 #include <queue>
+#include <stack>
 using namespace std;
 
-int lab[10][10];
-int xx[4]={-1,0,1,0};// 왼 위 오 아
+int n, m;
+int lab[10][10]={0};
+int xx[4]={-1,0,1,0}; //왼 위 오 아
 int yy[4]={0,-1,0,1};
+int blanc = -3;
+int maxi = 0;
 vector<pair<int, int>> virus;
-int affected[100]={0};
-int safe=0;
 
-void bfs(int v){
-    int visited[10][10]={0};
+void bfs(){
     queue<pair<int, int>> q;
-    q.push(virus[v]);
-    visited[virus[v].first][virus[v].second]=1;
+    int visit[10][10]={0,};
+    int total = 0;
+    for(int i=0; i<virus.size(); i++){
+        q.push(virus[i]);
+        visit[virus[i].first][virus[i].second]=1;
+    }
     while(!q.empty()){
-        int nextX = q.front().second;
-        int nextY = q.front().first;
-        if(q.size()==1&&affected[v]!=0){
-            break;
-        }
+        int y = q.front().first;
+        int x = q.front().second;
         q.pop();
         for(int i=0; i<4; i++){
-            if(lab[nextY+yy[i]][nextX+xx[i]]==0&&visited[nextY+yy[i]][nextX+xx[i]]==0){
-                q.push({nextX+xx[i],nextY+yy[i]});
-                visited[nextY+yy[i]][nextX+xx[i]]=1;
-                affected[v]++;
+            int Y = y+yy[i];
+            int X = x+xx[i];
+            if(lab[Y][X]==0 && visit[Y][X]==0){
+                visit[Y][X]=1;
+                q.push({Y,X});
+                total ++;
+            }
+        }
+    }
+    if(maxi<blanc - total){
+        maxi = blanc - total;
+    }
+}
+
+
+void fillBlock(pair<int, int> curr, int nums){
+    if(nums == 3){
+        bfs();
+    }else{
+        for(int i=1; i<n+1; i++){
+            for(int j=1; j<m+1; j++){
+               if(((curr.first==i&&curr.second<j)||(curr.first<i))&&lab[i][j]==0){
+                    lab[i][j]=1;
+                    fillBlock({i,j},nums+1);
+                    lab[i][j]=0;
+                }
             }
         }
     }
 }
 
 int main(){
-    int n, m;
-    cin >> n >>  m;
-    int nums=0;
-    for(int i=0; i<n+1; i++){
-        for(int j=0; j<m+1; j++){
-            if(j==0||j==n||i==0||i==n){
+    cin >> n >> m; //y, x
+    for(int i=0; i<n+2; i++){
+        if(i==0 || i==n+1){
+            for(int j=1; j<m+1; j++){
                 lab[i][j]=1;
-            }else{
-                cin>>lab[i][j];
-                if(lab[i][j]==2){
-                    virus.push_back({i,j});
-                }else if(lab[i][j]==0){
-                    safe++;
+            }
+        }else{
+            for(int j=0; j<m+2; j++){
+                if(j==0 || j==m+1){
+                    lab[i][j]=1;
+                }else{
+                    cin >> lab[i][j];
+                    if(lab[i][j]==2){
+                        virus.push_back({i,j});
+                    }else if(lab[i][j]==0){
+                        blanc ++;
+                    }
                 }
             }
         }
     }
-    cout<<"safezoon: "<< safe<<endl;
-    for(int i=0; i<virus.size(); i++){
-        bfs(i);
-        cout<<affected[i]<<" ";
-    }
-
-    for(int i=0; i<virus.size(); i++){
-        int x = virus[i].second;
-        int y = virus[i].first;
-        
-    }
-
+    for(int i=1; i<n+1; i++){
+        for(int j=1; j<m+1; j++){
+            if(lab[i][j]==0){
+                lab[i][j]=1;
+                fillBlock({i,j}, 1);
+                lab[i][j]=0;
+            }
+        }
+    } 
+    cout<<maxi;
 }
