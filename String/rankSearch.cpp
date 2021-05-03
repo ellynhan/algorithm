@@ -10,10 +10,11 @@ vector<int> solution(vector<string> info, vector<string> query) {
     //개발언어 직군 경력 소울푸드 점수 50000개 이하
     vector<int> answer;
     map<string, vector<int>> m;
+    vector<int> score;
     for(int i=0; i<info.size(); i++){
         istringstream buf(info[i]);
+        string word;
         for(int j=0; j<4; j++){
-            string word;
             buf >> word;
             if(m.count(word)>0){
                 m[word].push_back(i);
@@ -22,44 +23,43 @@ vector<int> solution(vector<string> info, vector<string> query) {
                 m[word]=v;
             }
         }
+        buf >> word;
+        score.push_back(stoi(word));
     }
     
     for(int i=0; i<query.size(); i++){
+        int total = 0;
         istringstream buf(query[i]);
-        int num = -1;
-        int total  =0;
-        map<int, int> cnt;
-        int checkNum = 2;
         string word;
+        map<int, int> check;
+        for(int j=0; j<info.size(); j++){
+            check[j]=0;
+        }
+        int checkNum = 4;
         for(int j=0; j<4; j++){
             buf >> word;
             if(word=="-"){
-                num -= 1;
-                checkNum -= 1;
+                checkNum --;
             }else{
                 if(m[word].size()==0){
                     break;
-                }
-                for(int k=0; k<m[word].size(); k++){
-                    if(cnt.count(m[word][k])>0){
-                        if(cnt[m[word][k]]==num){
-                            cnt[m[word][k]]++;
-                            if(num == checkNum){
-                                total ++;
-                            }
-                        }
-                    }else{
-                        cnt[m[word][k]]= 0;
+                }else{
+                    for(int k=0; k<m[word].size(); k++){
+                        check[m[word][k]] ++;
                     }
                 }
-                num++;
             }
-            buf>> word; //and
+            buf >> word;
+        }
+        buf >> word;
+        map<int, int>::iterator it;
+        for(it=check.begin(); it!=check.end(); it++){
+            if(it->second == checkNum && score[it->first]>=stoi(word)){
+                total++;
+            }
+            
         }
         answer.push_back(total);
-    }
-    for(int i=0; i<answer.size(); i++){
-        cout<<answer[i]<<" ";
     }
     return answer;
 }
