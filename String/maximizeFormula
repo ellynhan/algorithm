@@ -7,7 +7,7 @@ using namespace std;
 long long solution(string expression) {
     long long answer = 0;
     char op[3]={'+','-','*'};
-    for(int i=0; i<5; i++){
+    for(int i=0; i<6; i++){
         string exp = expression;
         for(int j=0; j<3; j++){
             for(int k=0; k<exp.length(); k++){
