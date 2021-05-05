@@ -1,61 +1,56 @@
-//1137
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
-#include <set>
-using namespace std;
- 
- long long cal(vector<string>& priority, vector<string>& parts){
-     int visited[100]={0};
-     int used = 0;
-     int ordCnt = 0;
-     while(used != parts.size()){
-        for(int i=0; i<parts.size(); i++){
-            if(priorit)
-        }
-        ordCnt ++;
-     }
-     
- }
 
+using namespace std;
 
 long long solution(string expression) {
     long long answer = 0;
-    vector<string> orders;
-    set<string> tmp;
-    vector<int> operands;
-    string str="";
-    for(int i=0; i<expression.length(); i++){
-        if(expression[i]>='0'&&expression[i]<='9'){
-            str+= expression[i];
-        }else{
-            operands.push_back(stoi(str));
-            orders.push_back(str);
-            orders.push_back(expression[i]);
-            str = "";
-            tmp.insert(string(expression[i]));
+    char op[3]={'+','-','*'};
+    for(int i=0; i<5; i++){
+        string exp = expression;
+        for(int j=0; j<3; j++){
+            for(int k=0; k<exp.length(); k++){
+                if(exp[k]==op[j]){
+                    int posBefore = k-1;
+                    int posAfter = k+1;
+                    while(exp[posBefore]>='0'&&exp[posBefore]<='9'){
+                        posBefore--;
+                    }
+                    while(exp[posAfter]>='0'&&exp[posAfter]<='9'){
+                        posAfter++;
+                    }
+                    if((posBefore>=1&&exp[posBefore-1]<'0'||exp[posBefore-1]>'9')||posBefore==0){
+                        posBefore--;
+                    }
+                    if(posAfter==k+1){
+                        posAfter++;
+                        while(exp[posAfter]>='0'&&exp[posAfter]<='9'){
+                            posAfter++;
+                        }
+                    }
+                    string previousPart = exp.substr(0,posBefore+1);
+                    string nextPart = exp.substr(posAfter,exp.length()-posAfter);
+                    long long operand1 = stoll(exp.substr(posBefore+1,k-posBefore-1));
+                    long long operand2 = stoll(exp.substr(k+1,posAfter-k-1));
+                    long long compute;
+                    
+                    if(op[j]=='-'){
+                        compute = operand1-operand2;
+                    }else if(op[j]=='+'){
+                        compute = operand1+operand2;
+                    }else{
+                        compute = operand1*operand2;
+                    }
+                    exp = previousPart+to_string(compute)+nextPart;
+                    k=posBefore+to_string(compute).length();
+                }
+            }
         }
-    }
-    set<string>::iterator it;
-    vector<string>operators;
-    for(it=tmp.begin(); it!=tmp.end(); it++){
-        operators.push_back(*it);
-    }
-
-    do {
-        for(int i=0; i<operators.size(); i++){
-            cout<<operators[i]<<" ";
-        }
-        cout<<endl;
-    }while(next_permutation(operators.begin(), operators.end()));
-    answer = operands[0];
-    for(int i=1; i<operands.size(); i++){
-
+        long long result = stoll(exp);
+        if(result<0)result*=-1; 
+        answer = answer>result ?answer:result;
+        next_permutation(op,op+3);
     }
     return answer;
-}
-
-int main(){
-    solution("100-200*300-500+20");
 }
