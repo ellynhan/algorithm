@@ -1,4 +1,4 @@
-//1838
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -22,7 +22,7 @@ vector<int> solution(vector<string> gems) {
     if(totalSort==1){
         return {1,1};
     }else if(totalSort==gems.size()){
-        return answer;
+        return {1,int(gems.size())};
     }else{
         map<string, int> loc; //보석당 위치 저장
         vector<int> total_cnt;//종류별 개수 저장
@@ -55,7 +55,6 @@ vector<int> solution(vector<string> gems) {
             i++;
         }
     }
-
     return {answer[0]+1,answer[1]+1};
 }
 
