@@ -8,7 +8,7 @@
 프로필](http://mazassumnida.wtf/api/v2/generate_badge?boj=wown252)](https://solved.ac/wown252)
 
 
-Baekjoon algorithm and Programmers problems
+Baekjoon algorithm and Programmers problemsd
 
 * Naming Convention :
 
