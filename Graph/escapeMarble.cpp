@@ -6,10 +6,10 @@ int n, m;
 char board[10][10];
 int x[4]={1,-1,0,0};//오 왼 위 아래
 int y[4]={0,0,-1,1};
-int sum = 0;
+int total = 0;
 void dfs(pair<int, int> R, pair<int, int> B, int cnt){ //재귀 최대 10번
     if(cnt>=10) return;
-    for(int i=0; i<4&&sum==0; i++){
+    for(int i=0; i<4; i++){
         pair<int, int> currR = R;
         pair<int, int> currB = B;
         while(board[currR.first][currR.second]=='.'){ //빈칸있을 때 쭉 굴림
@@ -24,7 +24,7 @@ void dfs(pair<int, int> R, pair<int, int> B, int cnt){ //재귀 최대 10번
             continue;
         }
         if(board[currR.first][currR.second]=='O'){ //구멍에 들어감
-            sum += 1;
+            total = min(total, cnt);
             return ;
         }
         currR.first -= y[i];
@@ -80,10 +80,10 @@ int main(){
         }
     }
     dfs(R, B, 0);
-    if(sum == 0){
-        cout<<0;
+    if(total == 0){
+        cout<<total;
     }else{
-        cout<<1;
+        cout<<-1;
     }
     //어차피 sum +=1에서 return 해서 cout<<sum해도 답이 됨
 }
