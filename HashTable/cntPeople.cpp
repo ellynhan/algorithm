@@ -15,5 +15,3 @@ int main() {
 		cout << *it << "\n";
 	return 0;
 }
-
-//해쉬 이용해서 다시풀기. 
